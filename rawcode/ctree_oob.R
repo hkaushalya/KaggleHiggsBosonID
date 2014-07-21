@@ -1,3 +1,4 @@
+rm(list=ls())
 getwd()
 df <- read.csv('data/training.csv')
 str(df)
@@ -11,6 +12,7 @@ hist(df$DER_mass_vis)
 #boxplot(df[,pri.vars])
 #plot(df[,pri.vars])
 library(party)
+df.prim.only <- df.prim.only[is.na]
 df.prim.only <- data.frame(cbind(df[,pri.vars], df$Label))
 
 ct <- ctree(df.prim.only$df.Label ~ ., data = df.prim.only)

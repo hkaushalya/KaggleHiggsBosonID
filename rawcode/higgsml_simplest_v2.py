@@ -6,6 +6,9 @@ import csv
 
 print "Reading in training file"
 alltraining = list(csv.reader(open("../data/training.csv","rb"), delimiter=','))
+print alltraining[0]
+print alltraining[1]
+print alltraining[2]
 
 # first line is the list of variables
 headertraining        = alltraining[0]
@@ -19,16 +22,16 @@ headertest        = alltest[0]
 alltest=alltest[1:]
 
 # get the index of a few variables
-immc=headertraining.index("DER_mass_MMC")
-injet=headertraining.index("PRI_jet_num")
-iweight=headertraining.index("Weight")
-ilabel=headertraining.index("Label")
-iid=headertraining.index("EventId")
+immc   = headertraining.index("DER_mass_MMC")
+injet  = headertraining.index("PRI_jet_num")
+iweight= headertraining.index("Weight")
+ilabel = headertraining.index("Label")
+iid    = headertraining.index("EventId")
 
 
 print "Loop on training dataset and compute the score"
 
-headertraining+=["myscore"]
+headertraining+=["myscore"]    # add column to record scores
 for entry in alltraining:
     # turn all entries from string to float, except EventId and PRI_jet_num to int, except label remains string
     for i in range(len(entry)):
@@ -47,7 +50,8 @@ for entry in alltraining:
 # at this stage alltraining is a list (one entry per line) of list of variables
 # which can be conveniently accessed by getting the index from the header 
 
-threshold=-22 # somewhat arbitrary value, should be optimised
+#threshold=-22 # somewhat arbitrary value, should be optimised
+threshold=-21.5 # somewhat arbitrary value, should be optimised
 
 print "Loop again to determine the AMS, using threshold:",threshold
 sumsig=0.

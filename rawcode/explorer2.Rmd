@@ -1,0 +1,64 @@
+---
+title: "Higgs ID Explorer"
+author: "Sam Hewamanage"
+date: "July 26, 2014"
+output: pdf_document
+---
+
+
+```{r, echo=FALSE,cache=TRUE,comment=""}
+rm(list=ls())
+getwd()
+df <- read.csv('../data/training.csv', header=T)
+str(df)
+col.names <- names(df)
+der.vars <- col.names[grep('DER_', col.names)]
+pri.vars <- col.names[grep('PRI_', col.names)]
+target <- 'Label'
+sb.weight <- 'Weight'
+
+summary(df)
+```
+
+## Mean and Variance of Derived variables for Signal and Background
+```{r, echo=FALSE, cache=TRUE ,comment=""}
+library(doBy)
+summaryBy(Weight+DER_mass_MMC+DER_mass_transverse_met_lep+DER_mass_vis+DER_pt_h
+          +DER_deltaeta_jet_jet+DER_mass_jet_jet+DER_prodeta_jet_jet+DER_deltar_tau_lep
+          +DER_pt_tot+DER_sum_pt+DER_pt_ratio_lep_tau+DER_met_phi_centrality
+          +DER_lep_eta_centrality ~ Label, data=df, FUN =c(mean, var))
+```
+
+## Density plots of `Weight' Variables for Signal & Background events
+```{r, cache=TRUE}
+library(sm)
+# create value labels
+sb.f <- factor(df$Label, levels= c(1,2), labels = c("b", "s")) 
+sm.density.compare(df$Weight, df$Label, xlab="Weight", model="equal")
+  colfill<-c(2:(2+length(levels(sb.f)))) 
+  legend("topright", levels(sb.f), fill=colfill) 
+```
+
+
+## Density plots of Derived Variables for Signal & Background events
+
+```{r, cache=TRUE}
+library(sm)
+
+for(var in der.vars){
+  sm.density.compare(df[,var], df$Label, xlab=var, model="equal")
+  # add legend via mouse click
+  #legend(locator(1), levels(sb.f), fill=colfill) 
+  legend("topright", levels(sb.f), fill=colfill) 
+}
+
+```
+
+
+## Density plots of Primary Variables for Signal & Background events
+```{r, cache=TRUE}
+for(var in pri.vars){
+  sm.density.compare(df[,var], df$Label, xlab=var,model="equal")
+  legend("topright", levels(sb.f), fill=colfill) 
+}
+```
